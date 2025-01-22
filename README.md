@@ -1,3 +1,5 @@
-# Laboratorio-2-Tipos de datos y operadores.
+# Laboratorio-6-Imports.
 
-- En un principio había hecho cada cáculo de manera separada, pero después de practicar e investigar un poco he visto que se podía hacer todo el cálculo junto.
+- He hecho la modularacización siguiendo lo pasos indicados en el modulo.
+- He aprovechado para refactorizar el codigo siguiendo las indicaciones hechas al finalizar el laboratorio de condicionales.
+- He dejado imports vacíos debido a que typeScript me lo solicita y me lo marca como error. Entiendo que esto no es buena práctica en proyectos más grandes y complejos. En este caso, el progama sigue funcionando correctamente.
