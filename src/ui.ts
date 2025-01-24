@@ -1,10 +1,13 @@
 import { partida } from "./modelo";
 import {
+  actualizarPuntuacion,
   calcularValorDeCarta,
   dameCarta,
-  generarUrlCarta,
-  generarMensajePuntuacion,
-  generarMensajeGameOver,
+  obtenerMensajeMePlanto,
+  obtenerMensajePuntuacion,
+  obtenerNumeroAleatorio,
+  sumarPuntuacion,
+  obtenerUrlCarta,
 } from "./motor";
 
 // Muestra puntación por pantalla
@@ -19,141 +22,121 @@ export const muestraPuntuacion = () => {
   }
 };
 
-export const actualizarImagenCarta = (url: string): void => {
+const gestionarNuevaCarta = (): void => {
+  const numeroAleatorio = obtenerNumeroAleatorio();
+  const carta = dameCarta(numeroAleatorio);
+  pintarCarta(carta);
+  const valorActual = calcularValorDeCarta(carta);
+  const puntosSumados = sumarPuntuacion(valorActual);
+  actualizarPuntuacion(puntosSumados);
+  muestraPuntuacion();
+  console.log(`Puntuación tras pedir carta: ${partida.puntuacion}`);
+  gestionarFinalDePartida();
+};
+
+const actualizarUrlCarta = (UrlCarta: string): void => {
   const imagenCarta = document.getElementById("imagenCarta");
-  if (
-    imagenCarta !== null &&
-    imagenCarta !== undefined &&
-    imagenCarta instanceof HTMLImageElement
-  ) {
-    imagenCarta.src = url;
+  if (imagenCarta instanceof HTMLImageElement) {
+    imagenCarta.src = UrlCarta;
   }
 };
 
-export const mostrarCarta = (carta: number): void => {
-  const urlCarta = generarUrlCarta(carta);
-  actualizarImagenCarta(urlCarta);
+const pintarCarta = (carta: number): void => {
+  const UrlCarta = obtenerUrlCarta(carta);
+  actualizarUrlCarta(UrlCarta);
 };
 
-const muestraMensajeGameOver = (mensajeGameOver: string): void => {
-  const elementoGameOver = document.getElementById("gameOver");
-  if (elementoGameOver !== null && elementoGameOver !== undefined) {
-    elementoGameOver.innerHTML = mensajeGameOver;
+const pintarMensajePuntuacion = (resultadoPuntuacion: string): void => {
+  const mensajePuntuacionFinal = document.getElementById(
+    "mensajePuntuacionFinal"
+  );
+  if (mensajePuntuacionFinal) {
+    mensajePuntuacionFinal.innerHTML = resultadoPuntuacion;
   }
 };
 
-// Desactiva este botón si finaliza la partida
-const desactivaBotonDameCarta = () => {
-  const botonDameCarta = document.getElementById("dameCarta");
-  if (
-    botonDameCarta !== null &&
-    botonDameCarta !== undefined &&
-    botonDameCarta instanceof HTMLButtonElement
-  ) {
-    botonDameCarta.disabled = true;
-  } else {
-    console.error("El elemento no es un botón o no existe");
-  }
+const gestionarFinalDePartida = (): void => {
+  const resultadoPuntuacion = obtenerMensajePuntuacion(partida.puntuacion);
+  pintarMensajePuntuacion(resultadoPuntuacion);
+  botonesFinalDePartida();
 };
 
-const gestionarGameOver = (): void => {
-  const mensajeGameOver = generarMensajeGameOver();
-  muestraMensajeGameOver(mensajeGameOver);
-  desactivaBotonDameCarta();
-  finalizarPartida();
-};
-
-export const mostrarMensajePuntuacion = (mensaje: string): void => {
+const pintarMensajeMePlanto = (resultadopMensajeMePlanto: string) => {
   const elementoMeplanto = document.getElementById("mePlanto");
-  if (elementoMeplanto !== null && elementoMeplanto !== undefined) {
-    elementoMeplanto.innerHTML = mensaje;
+  if (elementoMeplanto) {
+    elementoMeplanto.innerHTML = resultadopMensajeMePlanto;
   }
 };
 
-export const gestionarMePlanto = (): void => {
-  const mensaje = generarMensajePuntuacion();
-  mostrarMensajePuntuacion(mensaje);
+const gestionarMePlanto = (): void => {
+  const resultadopMensajeMePlanto = obtenerMensajeMePlanto(partida.puntuacion);
+  pintarMensajeMePlanto(resultadopMensajeMePlanto);
 };
 
-export const botonMePlanto = document.getElementById("botonMePlanto");
-if (
-  botonMePlanto !== null &&
-  botonMePlanto !== undefined &&
-  botonMePlanto instanceof HTMLButtonElement
-) {
+const botonMePlanto = document.getElementById("botonMePlanto");
+if (botonMePlanto instanceof HTMLButtonElement) {
   botonMePlanto.addEventListener("click", () => {
     gestionarMePlanto();
-    const botonDameCarta = document.getElementById("dameCarta");
-    if (
-      botonDameCarta !== null &&
-      botonDameCarta !== undefined &&
-      botonDameCarta instanceof HTMLButtonElement
-    ) {
-      botonDameCarta.disabled = true;
-    }
-    finalizarPartida();
+    botonesFinalDePartida();
   });
 }
 
-export const handleDameCarta = () => {
-  const carta: number = dameCarta();
-  mostrarCarta(carta);
-  const valorActual = calcularValorDeCarta(carta);
-  partida.puntuacion += valorActual;
-  muestraPuntuacion();
-  gestionarGameOver();
-};
-
-// Muestra el botón nueva partida al finalizar partida
-export const finalizarPartida = () => {
+const botonesFinalDePartida = () => {
   const botonDameCarta = document.getElementById("dameCarta");
-  if (
-    botonDameCarta !== null &&
-    botonDameCarta !== undefined &&
-    botonDameCarta instanceof HTMLButtonElement
-  ) {
+  if (botonDameCarta instanceof HTMLButtonElement) {
     botonDameCarta.disabled = true;
   }
+  const botonMePlanto = document.getElementById("botonMePlanto");
+  if (botonMePlanto instanceof HTMLButtonElement) {
+    botonMePlanto.disabled = true;
+  }
   const botonNuevaPartida = document.getElementById("nuevaPartida");
-  if (
-    botonNuevaPartida !== null &&
-    botonNuevaPartida !== undefined &&
-    botonNuevaPartida instanceof HTMLButtonElement
-  ) {
+  if (botonNuevaPartida instanceof HTMLButtonElement) {
     botonNuevaPartida.style.display = "block";
   }
 };
 
-// Reinicia todos los elementos de la partida
-export const reiniciaPartida = () => {
-  partida.puntuacion = 0;
+export const botonesInicioDePartida = (): void => {
+  const botonDameCarta = document.getElementById("dameCarta");
+  if (botonDameCarta instanceof HTMLButtonElement) {
+    botonDameCarta.addEventListener("click", gestionarNuevaCarta);
+  }
+  const botonNuevaPartida = document.getElementById("nuevaPartida");
+  if (botonNuevaPartida instanceof HTMLButtonElement) {
+    botonNuevaPartida.addEventListener("click", () => {
+      reiniciaPartida();
+      botonNuevaPartida.style.display = "none";
+    });
+  }
+};
 
-  let elementoMeplanto = document.getElementById("mePlanto");
+// Reinicia todos los elementos de la partida
+const reiniciaPartida = (): void => {
+  partida.puntuacion = 0;
+  const elementoMeplanto = document.getElementById("mePlanto");
   if (elementoMeplanto) {
     elementoMeplanto.innerHTML = "";
   }
-  const elementoGameOver = document.getElementById("gameOver");
-  if (elementoGameOver) {
-    elementoGameOver.innerHTML = "";
+  const mensajePuntuacionFinal = document.getElementById(
+    "mensajePuntuacionFinal"
+  );
+  if (mensajePuntuacionFinal) {
+    mensajePuntuacionFinal.innerHTML = "";
   }
   const botonDameCarta = document.getElementById("dameCarta");
-  if (
-    botonDameCarta !== null &&
-    botonDameCarta !== undefined &&
-    botonDameCarta instanceof HTMLButtonElement
-  ) {
+  if (botonDameCarta instanceof HTMLButtonElement) {
     botonDameCarta.disabled = false;
+  }
+  const botonMePlanto = document.getElementById("botonMePlanto");
+  if (botonMePlanto instanceof HTMLButtonElement) {
+    botonMePlanto.disabled = false;
   }
   const elementoPuntuacion = document.getElementById("puntuacion");
   if (elementoPuntuacion) {
     elementoPuntuacion.innerHTML = `Llevas ${partida.puntuacion} puntos`;
   }
   const imagenCarta = document.getElementById("imagenCarta");
-  if (
-    imagenCarta !== null &&
-    imagenCarta !== undefined &&
-    imagenCarta instanceof HTMLImageElement
-  ) {
+  if (imagenCarta instanceof HTMLImageElement) {
     imagenCarta.src =
       "https://raw.githubusercontent.com/Lemoncode/fotos-ejemplos/main/cartas/back.jpg";
   }

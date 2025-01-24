@@ -46,7 +46,7 @@ button:hover {
   border-color: 4px solid black;
 }
 
-#gameOver {
+#mensajePuntuacionFinal {
   font-size: 1.5em;
   color: white;
   background-color: darkred;
