@@ -23,7 +23,7 @@ export const sumarPuntuacion = (valorActual: number) => {
   return partida.puntuacion + valorActual;
 };
 
-export const actualizarPuntuacion = (puntosSumados: number) => {
+export const actualizarPuntuacion = (puntosSumados: number): void => {
   partida.puntuacion = puntosSumados;
 };
 
@@ -61,7 +61,7 @@ export const obtenerMensajePuntuacion = (puntuacion: number): string => {
   } else if (puntuacion > 7.5) {
     return "¡Game Over! Has pasado los 7.5 puntos, intentalo de nuevo.";
   } else {
-    throw new Error("Resultado no reconocido. Verifica la puntuación.");
+    throw new Error("Resultado no reconocido. Verifica la puntuación");
   }
 };
 
@@ -73,6 +73,6 @@ export const obtenerMensajeMePlanto = (puntuacion: number): string => {
   } else if (puntuacion === 6 || puntuacion === 6.5 || puntuacion === 7) {
     return "Casi casi...";
   } else {
-    return "No se encontró el elemento id imagenCarta";
+    return "Resultado no reconocido. Verifica la puntuación";
   }
 };
