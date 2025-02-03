@@ -1,3 +1,2 @@
-# Laboratorio-6-Imports.
+# Laboratorio-7-Testing.
 
-- He hecho la modularacización siguiendo lo pasos indicados en el modulo.
